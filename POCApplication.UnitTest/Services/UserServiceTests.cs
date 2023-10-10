@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
 using Moq;
 using POCApplication.BusinessLayer.Services;
 using POCApplication.BusinessLayer.Services.Interfaces;

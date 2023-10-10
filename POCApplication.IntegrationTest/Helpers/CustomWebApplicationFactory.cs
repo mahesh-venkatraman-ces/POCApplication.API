@@ -33,7 +33,7 @@ namespace POCApplication.IntegrationTest.Helpers
                     return connection;
                 });
 
-                services.AddDbContext<AspNetCoreNTierDbContext>((container, options) =>
+                services.AddDbContext<ApplicationDbContext>((container, options) =>
                 {
                     var connection = container.GetRequiredService<DbConnection>();
                     options.UseSqlite(connection);

@@ -11,19 +11,19 @@ namespace POCApplication.DataAccessLayer.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly ApplicationDbContext _aspNetCoreNTierDbContext;
+        private readonly ApplicationDbContext _applicationDbContext;
         public UserRepository(ApplicationDbContext aspNetCoreNTierDbContext) : base(aspNetCoreNTierDbContext)
         {
-            _aspNetCoreNTierDbContext = aspNetCoreNTierDbContext;
+            _applicationDbContext = aspNetCoreNTierDbContext;
         }
 
         public async Task<User> UpdateUserAsync(User user)
         {
-            _ = _aspNetCoreNTierDbContext.Update(user);
+            _ = _applicationDbContext.Update(user);
 
-            _aspNetCoreNTierDbContext.Entry(user).Property(x => x.Password).IsModified = false;
+            _applicationDbContext.Entry(user).Property(x => x.Password).IsModified = false;
 
-            await _aspNetCoreNTierDbContext.SaveChangesAsync();
+            await _applicationDbContext.SaveChangesAsync();
             return user;
         }
     }

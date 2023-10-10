@@ -11,8 +11,6 @@ namespace POCApplication.IntegrationTest
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
 
-        private const string baseURL = "https://localhost:44338/";
-
         public UserControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _factory = factory;
