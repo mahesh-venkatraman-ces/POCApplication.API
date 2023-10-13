@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using POCApplication.BusinessLayer.Services.Interfaces;
 
 namespace aspnetcore.ntier.API.Controllers.V2;
 
-[Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {

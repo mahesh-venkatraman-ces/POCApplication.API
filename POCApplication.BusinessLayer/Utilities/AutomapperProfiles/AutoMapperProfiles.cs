@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using POCApplication.DataAccessLayer.Entities;
 using POCApplication.DTO.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace POCApplication.BusinessLayer.Utilities.AutomapperProfiles
 {
@@ -19,8 +13,6 @@ namespace POCApplication.BusinessLayer.Utilities.AutomapperProfiles
                 CreateMap<User, UserDTO>().ReverseMap();
                 CreateMap<User, UserToAddDTO>().ReverseMap();
                 CreateMap<User, UserToUpdateDTO>().ReverseMap();
-                CreateMap<User, UserToRegisterDTO>().ReverseMap();
-                CreateMap<User, UserToReturnDTO>().ReverseMap();
             }
         }
     }

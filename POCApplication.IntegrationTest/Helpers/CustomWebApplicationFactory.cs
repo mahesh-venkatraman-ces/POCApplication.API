@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using POCApplication.DataAccessLayer.DataContext;
 using System.Data.Common;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.Sqlite;
 
 namespace POCApplication.IntegrationTest.Helpers
 {
@@ -33,7 +35,7 @@ namespace POCApplication.IntegrationTest.Helpers
                     return connection;
                 });
 
-                services.AddDbContext<AspNetCoreNTierDbContext>((container, options) =>
+                services.AddDbContext<ApplicationDbContext>((container, options) =>
                 {
                     var connection = container.GetRequiredService<DbConnection>();
                     options.UseSqlite(connection);
