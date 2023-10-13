@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using POCApplication.DataAccessLayer.DataContext;
 using System.Data.Common;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.Sqlite;
 
 namespace POCApplication.IntegrationTest.Helpers
 {

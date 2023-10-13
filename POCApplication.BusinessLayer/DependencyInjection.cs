@@ -12,7 +12,6 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(typeof(AutoMapperProfiles));
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAuthService, AuthService>();
         DataAccessLayer.DependencyInjection.RegisterDALDependencies(services, Configuration);
     }
 }

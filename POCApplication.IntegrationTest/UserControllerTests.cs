@@ -29,7 +29,7 @@ namespace POCApplication.IntegrationTest
             }
 
             // Act
-            var response = await _client.GetAsync("api/v2/User/getusers");
+            var response = await _client.GetAsync("api/User/getusers");
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

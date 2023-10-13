@@ -13,8 +13,6 @@ namespace POCApplication.BusinessLayer.Utilities.AutomapperProfiles
                 CreateMap<User, UserDTO>().ReverseMap();
                 CreateMap<User, UserToAddDTO>().ReverseMap();
                 CreateMap<User, UserToUpdateDTO>().ReverseMap();
-                CreateMap<User, UserToRegisterDTO>().ReverseMap();
-                CreateMap<User, UserToReturnDTO>().ReverseMap();
             }
         }
     }

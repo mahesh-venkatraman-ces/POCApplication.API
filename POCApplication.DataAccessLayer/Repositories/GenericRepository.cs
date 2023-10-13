@@ -20,13 +20,6 @@ namespace POCApplication.DataAccessLayer.Repositories
             return entity;
         }
 
-        public async Task<List<TEntity>> AddRangeAsync(List<TEntity> entity)
-        {
-            await _applicationDbContext.AddRangeAsync(entity);
-            await _applicationDbContext.SaveChangesAsync();
-            return entity;
-        }
-
         public async Task<int> DeleteAsync(TEntity entity)
         {
             _ = _applicationDbContext.Remove(entity);
@@ -41,20 +34,6 @@ namespace POCApplication.DataAccessLayer.Repositories
         public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null, CancellationToken cancellationToken = default)
         {
             return await (filter == null ? _applicationDbContext.Set<TEntity>().ToListAsync(cancellationToken) : _applicationDbContext.Set<TEntity>().Where(filter).ToListAsync(cancellationToken));
-        }
-
-        public async Task<TEntity> UpdateAsync(TEntity entity)
-        {
-            _ = _applicationDbContext.Update(entity);
-            await _applicationDbContext.SaveChangesAsync();
-            return entity;
-        }
-
-        public async Task<List<TEntity>> UpdateRangeAsync(List<TEntity> entity)
-        {
-            _applicationDbContext.UpdateRange(entity);
-            await _applicationDbContext.SaveChangesAsync();
-            return entity;
         }
     }
 }
