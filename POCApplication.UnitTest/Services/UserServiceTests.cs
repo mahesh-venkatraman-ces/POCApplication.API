@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AutoFixture.Xunit2;
+using AutoMapper;
 using Moq;
 using POCApplication.BusinessLayer.Services;
 using POCApplication.BusinessLayer.Services.Interfaces;
@@ -17,42 +18,8 @@ namespace POCApplication.UnitTest.Services
         private readonly Mock<IUserRepository> _userRepository;
         private readonly IMapper _mapper;
 
-        private const int UserId = 5;
-        private readonly User _userEntity;
-        private readonly UserToAddDTO _userToAddDTO;
-        private readonly UserToUpdateDTO _userToUpdateDTO;
-
         public UserServiceTests()
         {
-            _userEntity = new User()
-            {
-                UserId = UserId,
-                Username = "UserEntityUsername",
-                Name = "UserEntityName",
-                Surname = "UserEntitySurname"
-            };
-
-            _userToAddDTO = new UserToAddDTO()
-            {
-                Username = "UserToAddDTOUsername",
-                Name = "UserToAddDTOName",
-                Surname = "UserToAddDTOSurname"
-            };
-
-            _userToUpdateDTO = new UserToUpdateDTO()
-            {
-                UserId = UserId,
-                Username = "UserToUpdateDTOUsername",
-                Name = "UserToUpdateDTOName",
-                Surname = "UserToUpdateDTOSurname"
-            };
-
-            _userRepository = new Mock<IUserRepository>();
-
-            _userRepository
-                .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<User, bool>>>(), CancellationToken.None))
-                .ReturnsAsync(_userEntity);
-
             var myProfile = new AutoMapperProfiles.AutoMapperProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
             _mapper = new Mapper(configuration);
@@ -60,11 +27,12 @@ namespace POCApplication.UnitTest.Services
             _userService = new UserService(_userRepository.Object, _mapper);
         }
 
-        [Fact]
-        public async Task GetUsersAsync_WhenSuccess_ReturnsUserDTOList()
+        [Theory]
+        [AutoData]
+        public async Task GetUsersAsync_WhenSuccess_ReturnsUserDTOList(List<User> users)
         {
             //Arrange
-            var userEntityList = new List<User>() { _userEntity, _userEntity };
+            var userEntityList = users;
 
             _userRepository
                 .Setup(repo => repo.GetListAsync(null!, CancellationToken.None))
@@ -77,18 +45,20 @@ namespace POCApplication.UnitTest.Services
             Assert.Equal(2, result.Count);
         }
 
-        [Fact]
-        public async Task GetUserAsync_WhenSuccess_ReturnsUserDTOList()
+        [Theory]
+        [AutoData]
+        public async Task GetUserAsync_WhenSuccess_ReturnsUserDTOList(int userid)
         {
             //Act
-            var result = await _userService.GetUserAsync(UserId);
+            var result = await _userService.GetUserAsync(userid);
 
             //Assert
             Assert.NotNull(result);
         }
 
-        [Fact]
-        public async Task GetUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException()
+        [Theory]
+        [AutoData]
+        public async Task GetUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException(int userid)
         {
             //Arrange
             _userRepository
@@ -96,43 +66,46 @@ namespace POCApplication.UnitTest.Services
                 .ReturnsAsync((User)null!);
 
             //Act & Assert
-            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.GetUserAsync(UserId));
+            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.GetUserAsync(userid));
         }
 
-        [Fact]
-        public async Task AddUserAsync_WhenSuccess_AddsThenReturnsUserDTO()
+        [Theory]
+        [AutoData]
+        public async Task AddUserAsync_WhenSuccess_AddsThenReturnsUserDTO(User user, UserToAddDTO usertoaddDTO)
         {
             //Arrange
             _userRepository
                 .Setup(repo => repo.AddAsync(It.IsAny<User>()))
-                .ReturnsAsync(_userEntity);
+                .ReturnsAsync(user);
 
             //Act
-            var result = await _userService.AddUserAsync(_userToAddDTO);
+            var result = await _userService.AddUserAsync(usertoaddDTO);
 
             //Assert
             Assert.IsType<UserDTO>(result);
-            Assert.Equal(_userEntity.UserId, result.UserId);
+            Assert.Equal(user.UserId, result.UserId);
         }
 
-        [Fact]
-        public async Task UpdateUserAsync_WhenSuccess_UpdatesThenReturnsUserDTO()
+        [Theory]
+        [AutoData]
+        public async Task UpdateUserAsync_WhenSuccess_UpdatesThenReturnsUserDTO(User user, UserToUpdateDTO userToUpdateDTO)
         {
             //Arrange
             _userRepository
                 .Setup(repo => repo.UpdateUserAsync(It.IsAny<User>()))
-                .ReturnsAsync(_userEntity);
+                .ReturnsAsync(user);
 
             //Act
-            var result = await _userService.UpdateUserAsync(_userToUpdateDTO);
+            var result = await _userService.UpdateUserAsync(userToUpdateDTO);
 
             //Assert
             Assert.IsType<UserDTO>(result);
             Assert.NotNull(result);
         }
 
-        [Fact]
-        public async Task UpdateUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException()
+        [Theory]
+        [AutoData]
+        public async Task UpdateUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException(UserToUpdateDTO userToUpdateDTO)
         {
             //Arrange
             _userRepository
@@ -140,21 +113,23 @@ namespace POCApplication.UnitTest.Services
                 .ReturnsAsync((User)null!);
 
             //Act & Assert
-            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.UpdateUserAsync(_userToUpdateDTO));
+            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.UpdateUserAsync(userToUpdateDTO));
         }
 
-        [Fact]
-        public async Task DeleteUserAsync_WhenSuccess_CallsRepositoryDelete()
+        [Theory]
+        [AutoData]
+        public async Task DeleteUserAsync_WhenSuccess_CallsRepositoryDelete(int userid)
         {
             //Act
-            await _userService.DeleteUserAsync(UserId);
+            await _userService.DeleteUserAsync(userid);
 
             //Assert
             _userRepository.Verify(x => x.DeleteAsync(It.IsAny<User>()), Times.Once());
         }
 
-        [Fact]
-        public async Task DeleteUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException()
+        [Theory]
+        [AutoData]
+        public async Task DeleteUserAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException(int userid)
         {
             //Arrange
             _userRepository
@@ -162,7 +137,7 @@ namespace POCApplication.UnitTest.Services
                 .ReturnsAsync((User)null!);
 
             //Act & Assert
-            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.DeleteUserAsync(UserId));
+            await Assert.ThrowsAsync<UserNotFoundException>(() => _userService.DeleteUserAsync(userid));
         }
     }
 }
